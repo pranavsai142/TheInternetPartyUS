@@ -1,11 +1,17 @@
+body {
+  background-color: #F5F2E8;
+}
+
 h1, h2, h3, button {
     font-family: "American Typewriter", Times, serif;
     font-weight: normal;
 }
 
 button {
-  padding: 2%;
+  padding: 10px;
   border-radius: 20px;
+  cursor: pointer;
+  max-height: 50px;
 }
 
 .center {
@@ -32,6 +38,11 @@ button {
 
 .content {
   padding: 1%;
+}
+
+.form {
+  background-color: #ffffff;
+  border-radius: 10px;
 }
 
 /* Add a black background color to the top navigation */
