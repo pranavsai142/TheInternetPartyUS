@@ -4,17 +4,6 @@ import { getAuth, onAuthStateChanged, connectAuthEmulator, signInWithEmailAndPas
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-//Document Elements
-const loginButton = document.getElementById("login_button")
-const emailAddress = document.getElementById("email_address")
-const password = document.getElementById("password")
-function getValue(element) {
-    if(element.value != null) {
-        return element.value
-    } else {
-        return ""
-    }
-}
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAQ5Sty_qAzOBtd_h2gFTGEC5sHH3_fNWE",
@@ -27,19 +16,39 @@ const firebaseConfig = {
   };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app)
 connectAuthEmulator(auth, "http://localhost:9099")
 
+//Helper Functions
 const loginEmailPassword = async () => {
+    const emailAddress = document.getElementById("email_address")
+    const password = document.getElementById("password")
     const userCredentials = await signInWithEmailAndPassword(auth, getValue(emailAddress), getValue(password))
     console.log(userCredentials.user)
 }
-loginButton.addEventListener("click", loginEmailPassword)
+
 onAuthStateChanged(auth, user => {
     if(user !== null) {
         console.log("User logged in")
+        console.log(user)
     } else {
         console.log("No user")
     }
 })
+
+function getValue(element) {
+    if(element.value != null) {
+        return element.value
+    } else {
+        return ""
+    }
+}
+
+//Main function
+//On page init, based on what page user is on, specific functions are run
+if(document.location.pathname == "/login.html") {
+    const loginButton = document.getElementById("login_button")
+    loginButton.addEventListener("click", loginEmailPassword)
+} else if(document.location.pathname == "/index.html") {
+
+}
