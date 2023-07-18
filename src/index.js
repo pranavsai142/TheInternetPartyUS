@@ -5,12 +5,9 @@ import { getAuth, onAuthStateChanged, connectAuthEmulator, signInWithEmailAndPas
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 //Document Elements
-const btnLogin = document.getElementById("btnLogin")
-const txtEmail = document.getElementById("txtEmail")
-const txtPassword = document.getElementById("txtPassword")
-function getElement(id) {
-    return document.getElementById("btnLogin")
-}
+const loginButton = document.getElementById("login_button")
+const emailAddress = document.getElementById("email_address")
+const password = document.getElementById("password")
 function getValue(element) {
     if(element.value != null) {
         return element.value
@@ -35,13 +32,10 @@ const auth = getAuth(app)
 connectAuthEmulator(auth, "http://localhost:9099")
 
 const loginEmailPassword = async () => {
-    const loginEmail = getValue(getElement("txtEmail"))
-    const loginPassword = getValue(getElement("txtEmail"))
-
-    const userCredentials = await signInWithEmailAndPassword(auth, loginEmail, loginPassword)
+    const userCredentials = await signInWithEmailAndPassword(auth, getValue(emailAddress), getValue(password))
     console.log(userCredentials.user)
 }
-getElement("btnLogin").addEventListener("click", loginEmailPassword)
+loginButton.addEventListener("click", loginEmailPassword)
 onAuthStateChanged(auth, user => {
     if(user !== null) {
         console.log("User logged in")
