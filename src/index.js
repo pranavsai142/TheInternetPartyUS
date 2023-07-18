@@ -24,7 +24,17 @@ const loginEmailPassword = async () => {
     const emailAddress = document.getElementById("email_address")
     const password = document.getElementById("password")
     const userCredentials = await signInWithEmailAndPassword(auth, getValue(emailAddress), getValue(password))
-    console.log(userCredentials.user)
+    if(userCredentials.user !== null) {
+        document.location.pathname = "/account.html"
+    }
+}
+
+function logoutEmailPassword() {
+    auth.signOut().then(function() {
+        console.log('User logged out');
+      }, function(error) {
+        console.error('Log out error', error);
+      });
 }
 
 onAuthStateChanged(auth, user => {
@@ -49,6 +59,8 @@ function getValue(element) {
 if(document.location.pathname == "/login.html") {
     const loginButton = document.getElementById("login_button")
     loginButton.addEventListener("click", loginEmailPassword)
+    const logoutButton = document.getElementById("logout_button")
+    logoutButton.addEventListener("click", logoutEmailPassword)
 } else if(document.location.pathname == "/index.html") {
 
 }
