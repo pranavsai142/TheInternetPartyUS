@@ -1,8 +1,16 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app"
 import { getAuth, onAuthStateChanged, connectAuthEmulator, signInWithEmailAndPassword } from "firebase/auth"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
+import {
+    loginButton,
+    logoutButton,
+    loginError,
+    emailAddress,
+    password,
+    name
+} from "./ui"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,18 +22,16 @@ const firebaseConfig = {
     appId: "1:372100457867:web:e842fec6b1bf2ad40dbb8e",
     measurementId: "G-55X9M772TC"
   };
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app)
-connectAuthEmulator(auth, "http://localhost:9099")
 
 //Helper Functions
 const loginEmailPassword = async () => {
-    const emailAddress = document.getElementById("email_address")
-    const password = document.getElementById("password")
-    const userCredentials = await signInWithEmailAndPassword(auth, getValue(emailAddress), getValue(password))
-    if(userCredentials.user !== null) {
-        document.location.pathname = "/account.html"
+    try {
+        const userCredentials = await signInWithEmailAndPassword(auth, emailAddress.value, password.value)
+        if(userCredentials.user !== null) {
+            document.location.pathname = "/account.html"
+        }
+    } catch {
+        loginError.hidden = false
     }
 }
 
@@ -37,15 +43,6 @@ function logoutEmailPassword() {
       });
 }
 
-onAuthStateChanged(auth, user => {
-    if(user !== null) {
-        console.log("User logged in")
-        console.log(user)
-    } else {
-        console.log("No user")
-    }
-})
-
 function getValue(element) {
     if(element.value != null) {
         return element.value
@@ -54,13 +51,28 @@ function getValue(element) {
     }
 }
 
+function setAccountValues() {
+    console.log(user)
+    if(user) {
+        name.innerHTML = user.displayName
+    } else {
+        name.innerHTML = "User not logged in."
+    }
+}
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app)
+connectAuthEmulator(auth, "http://localhost:9099")
+console.log("test")
+const user = await auth.currentUser
+
 //Main function
 //On page init, based on what page user is on, specific functions are run
 if(document.location.pathname == "/login.html") {
-    const loginButton = document.getElementById("login_button")
     loginButton.addEventListener("click", loginEmailPassword)
-    const logoutButton = document.getElementById("logout_button")
     logoutButton.addEventListener("click", logoutEmailPassword)
-} else if(document.location.pathname == "/index.html") {
-
+    loginError.hidden = true
+} else if(document.location.pathname == "/account.html") {
+    setAccountValues()
 }
